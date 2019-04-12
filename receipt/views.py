@@ -33,9 +33,13 @@ def receipts(request):
             for j in i.items:
                 j['price'] /= 100
                 j['sum'] /= 100
-        total_summ = round(request.user.receipts.aggregate(Sum('summ'))['summ__sum'], 2)
-        context = {'pre_receipts': items, "summ": request.user.receipts.last().summ,
-                   "total_summ": total_summ}
+        print(request.user.receipts.all().count())
+        if request.user.receipts.all().count() > 0:
+            print("the hell?")
+            total_summ = round(request.user.receipts.aggregate(Sum('summ'))['summ__sum'], 2)
+        else:
+            total_summ = 0
+        context = {'pre_receipts': items, "total_summ": total_summ}
         return render(request, 'receipts.html', context=context)
     else:
         return render(request, 'receipts.html')
