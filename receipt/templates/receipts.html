@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row mb-2">
+        <div class="col-md-10 h4">Всего потрачено:</div>
+        <div class="col-md-2 h4">{{ total_summ }} &#8381;</div>
+    </div>
+
+    <div class="accordion" id="accordion">
+
+        {% for check in pre_receipts %}
+
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse"
+                                        data-target="#{{ check.pk }}" aria-expanded="true" aria-controls="collapseOne">
+                                    {{ check }}
+                                </button>
+                            </h5>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="btn">{{ check.summ }} &#8381;</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="{{ check.pk }}" class="collapse" aria-labelledby="headingOne"
+                     data-parent="#accordion">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-center">Quantity</th>
+                                <th></th>
+                                <th>Price</th>
+                                <th>Summ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for pre in check.items %}
+                                <tr>
+                                    <td>{{ pre.name|title }}</td>
+                                    <td class="text-center">{{ pre.quantity }}</td>
+                                    <td>*</td>
+                                    <td>{{ pre.price }} &#8381;</td>
+                                    <td> {{ pre.sum }} &#8381;</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4" class="border-top"><b>Сумма</b></td>
+                                <td class="border-top"><b>{{ summ }} &#8381;</b></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
