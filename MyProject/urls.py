@@ -16,12 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from receipt.views import home
+from receipt.views import home, save_receipt_data, scan_qr
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('receipts/', include('receipt.urls')),
-    path('accounts/', include('accounts.urls'))
+    path('accounts/', include('accounts.urls')),
+    path('from_string', save_receipt_data, name='from_string'),
+    path('from_qr', scan_qr, name='from_qr'),
 
 ]

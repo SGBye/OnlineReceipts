@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<form action="{% url 'save_raw_data' %}" method="POST">
+
+    <div class="row">
+        <div class="col-lg-10">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+                <div class="form-group">
+                    {% render_field field class="form-control" %}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-lg-2">
+            <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+        </div>
+</form>
+</div>
+{% endblock %}

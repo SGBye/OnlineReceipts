@@ -7,7 +7,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from urllib.parse import parse_qs
 
 from receipt.forms import ReceiptDataForm
-from .models import ReceiptData, Receipt
+from .models import Receipt
 
 
 def parse_string(string):
@@ -18,12 +18,11 @@ def parse_string(string):
 
 
 def home(request):
-    title = "Индексовая страница"
     form = ReceiptDataForm()
     if request.user.is_authenticated:
         return render(request, 'base.html',
-                      {'form': form, "pre_receipts": request.user.pre_receipts.all(), 'title': title})
-    return render(request, 'base.html', {'form': form, 'title': title})
+                      {'form': form, 'sms_code': request.user.profile.sms_code})
+    return render(request, 'base.html')
 
 
 def receipts(request):
@@ -34,7 +33,7 @@ def receipts(request):
             for j in i.items:
                 j['price'] /= 100
                 j['sum'] /= 100
-        total_summ = request.user.receipts.aggregate(Sum('summ'))['summ__sum']
+        total_summ = round(request.user.receipts.aggregate(Sum('summ'))['summ__sum'], 2)
         context = {'pre_receipts': items, "summ": request.user.receipts.last().summ,
                    "total_summ": total_summ}
         return render(request, 'receipts.html', context=context)
@@ -47,33 +46,38 @@ def save_receipt_data(request):
         form = ReceiptDataForm(request.POST)
         user = request.user
         if form.is_valid():
-            ReceiptData.create_from_dict(parse_string(form.cleaned_data['receipt_string']), user=request.user)
-            Receipt.login_to_api(user.profile.phone, user.profile.sms_code)
-            request.user.profile.is_logon = True
-            Receipt.check_existance(parse_string(form.cleaned_data['receipt_string']), user)
-            Receipt.get_real_receipt(parse_string(form.cleaned_data['receipt_string']), user)
+
+            if user.profile.login_to_api() != 200:
+                return HttpResponse(status=404)
+
+            if user.profile.check_existance(parse_string(form.cleaned_data['receipt_string'])) != 204:
+                return HttpResponse(status=404)
+
+            user.profile.get_real_receipt(parse_string(form.cleaned_data['receipt_string']))
             return redirect('/receipts')
         else:
             print("invalid")
     else:
         form = ReceiptDataForm()
-    return render(request, 'base.html', {'form': form})
+    return render(request, 'fromString.html', {'form': form})
 
 
 def scan_qr(request):
     if request.method == "POST":
         user = request.user
-        print(request.FILES)
         r = requests.post(settings.QR_CODE_URL, files=request.FILES)
         response = r.json()
         receipt_data = response[0]['symbol'][0]['data']
 
-        ReceiptData.create_from_dict(parse_string(receipt_data), user=request.user)
+        if user.profile.login_to_api() != 200:
+            return HttpResponse(status=404)
 
-        Receipt.login_to_api(user.profile.phone, user.profile.sms_code)
+        if user.profile.check_existance(parse_string(receipt_data)) != 204:
+            return HttpResponse(status=404)
 
-        Receipt.check_existance(parse_string(receipt_data), user)
-
-        Receipt.get_real_receipt(parse_string(receipt_data), user)
+        user.profile.get_real_receipt(parse_string(receipt_data))
 
         return HttpResponse(status=200)
+
+    else:
+        return render(request, 'fromQr.html')

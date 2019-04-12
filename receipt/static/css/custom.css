@@ -9,3 +9,8 @@ label{display:inline-block;margin-bottom:.5rem;margin-right:.5rem}
 #submit{
     horiz-align: center;
 }
+
+#mynav {
+    background-color: #003F72; !important;
+}
+

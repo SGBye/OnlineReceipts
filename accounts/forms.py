@@ -28,3 +28,7 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class SmsCodeForm(forms.Form):
+    sms_code = forms.CharField(label="Please, enter the code from sms. It's needed to access api", max_length=6)

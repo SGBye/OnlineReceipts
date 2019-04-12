@@ -1,3 +1,6 @@
+import json
+from json import JSONDecodeError
+
 import requests
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -5,6 +8,9 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from requests.auth import HTTPBasicAuth
+
+from receipt.models import Receipt
 
 
 class Profile(models.Model):
@@ -30,3 +36,34 @@ class Profile(models.Model):
         r = requests.post(url, json=payload)
         if r.status_code != 204:
             raise ValidationError("Unfortunately something went wrong. Try again!")
+
+    def get_new_code(self):
+        url = 'https://proverkacheka.nalog.ru:9999/v1/mobile/users/restore'
+        r = requests.post(url, json={"phone": self.phone})
+        print(r.status_code)
+        if r.status_code == 204:
+            return "ok"
+        else:
+            return "fail"
+
+    def login_to_api(self):
+        url = "https://proverkacheka.nalog.ru:9999/v1/mobile/users/login"
+        r = requests.get(url, auth=HTTPBasicAuth(self.phone, self.sms_code))
+        return r.status_code
+
+    def check_existance(self, data):
+        url = f"https://proverkacheka.nalog.ru:9999/v1/ofds/*/inns/*/fss/{data['fn']}/operations/1/tickets/{data['fd']}?fiscalSign={data['fp']}&date={data['time']}&sum={int(data['summ'])}"
+        r = requests.get(url, auth=HTTPBasicAuth(self.phone, self.sms_code))
+        return r.status_code
+
+    def get_real_receipt(self, data):
+        url = f'https://proverkacheka.nalog.ru:9999/v1/inns/*/kkts/*/fss/{data["fn"]}/tickets/{data["fd"]}?fiscalSign={data["fp"]}&sendToEmail=no'
+        headers = {"device-id": "web_app", "device-os": "windows"}
+        print("treying to create")
+        r = requests.get(url, headers=headers, auth=HTTPBasicAuth(self.phone, self.sms_code))
+        print(f"status code: {r.status_code}", r.text)
+        to_parse = json.loads(r.text)
+        try:
+            Receipt.create_from_json(to_parse, user=self.user)
+        except JSONDecodeError:
+            return "There was a mistake with json. Try again! "

@@ -9,17 +9,35 @@
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <script src="{% static 'js/popper.min.js' %}"></script>
+
     {% block stylesheet %}{% endblock %}  <!-- HERE -->
 
 </head>
 <body>
 {% block body %}
+    {% include 'modal.resetSmsCode.html' %}
+    {% include 'modal.saveNewSmsCode.html' %}
     <header class="mb-4">
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-blue" id="mynav">
             <div class="container">
                 <a class="navbar-brand" href="{% url 'home' %}">Receipts</a>
+                <nav class="navbar navbar-expand-lg navbar-light bg-blue">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav" id="myTab">
+                            <li class="nav-item"><a class="nav-link" id="my-font" href="{% url 'from_string' %}">Чек из
+                                строки</a></li>
+                            <li class="nav-item"><a class="nav-link" id="my-font" href="{% url 'from_qr' %}">Чек по QR коду</a></li>
+                            <li class="nav-item"><a class="nav-link" id="my-font" href={% url 'receipts' %}>Мои чеки</a></li>
+                        </ul>
+                    </div>
+                </nav>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
                         aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -34,8 +52,9 @@
                                     {{ user.username }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-                                    <a class="dropdown-item" href={% url 'receipts' %}>My receipts</a>
                                     <a class="dropdown-item" href={% url 'password_change' %}>Change password</a>
+                                    <a id="reset_sms" class="dropdown-item" href="#">Get another sms</a>
+                                    <a id="changeSmsCode" class="dropdown-item" href="#">Change sms-code</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
                                 </div>
@@ -55,6 +74,7 @@
         {% block content %}
             {% if user.is_authenticated %}
                 {% include 'includes/receipt.html' %}
+
             {% endif %}
         {% endblock %}
     </div>
