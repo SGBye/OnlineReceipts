@@ -55,7 +55,7 @@ def save_receipt_data(request):
                 return HttpResponse(status=404)
 
             if user.profile.check_existance(parse_string(form.cleaned_data['receipt_string'])) != 204:
-                return HttpResponse(status=404)
+                return HttpResponse("make sure you have confirmed the sms-code", status=404)
 
             user.profile.get_real_receipt(parse_string(form.cleaned_data['receipt_string']))
             return redirect('/receipts')
