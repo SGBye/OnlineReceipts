@@ -1,0 +1,16 @@
+label{display:inline-block;margin-bottom:.5rem;margin-right:.5rem}
+.navbar-brand {
+    font-family: 'Bevan', cursive;
+    font-size: 2em;
+}
+.form-custom {
+    width: 650px;
+}
+#submit{
+    horiz-align: center;
+}
+
+#mynav {
+    background-color: #003F72; !important;
+}
+

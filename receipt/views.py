@@ -2,6 +2,7 @@ import ast
 
 import requests
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, HttpResponse, redirect
 from urllib.parse import parse_qs
@@ -25,6 +26,7 @@ def home(request):
     return render(request, 'base.html')
 
 
+@login_required
 def receipts(request):
     if request.user.is_authenticated:
         items = list(request.user.receipts.all())
@@ -45,12 +47,12 @@ def receipts(request):
         return render(request, 'receipts.html')
 
 
+@login_required
 def save_receipt_data(request):
     if request.method == "POST":
         form = ReceiptDataForm(request.POST)
         user = request.user
         if form.is_valid():
-
             if user.profile.login_to_api() != 200:
                 return HttpResponse(status=404)
 
@@ -66,6 +68,7 @@ def save_receipt_data(request):
     return render(request, 'fromString.html', {'form': form})
 
 
+@login_required
 def scan_qr(request):
     if request.method == "POST":
         user = request.user
