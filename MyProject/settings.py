@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -135,3 +136,5 @@ QR_CODE_URL = 'http://api.qrserver.com/v1/read-qr-code/'
 API_LOGIN_URL = "https://proverkacheka.nalog.ru:9999/v1/mobile/users/login"
 API_REGISTER_URL = "https://proverkacheka.nalog.ru:9999/v1/mobile/users/signup"
 API_GET_NEW_PASSWORD = 'https://proverkacheka.nalog.ru:9999/v1/mobile/users/restore'
+
+django_heroku.settings(locals())
