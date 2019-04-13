@@ -36,7 +36,6 @@ class Profile(models.Model):
         r = requests.post(url, json=payload)
         if r.status_code != 204:
             self.get_new_code()
-            raise ValidationError("Unfortunately something went wrong. Try again!")
 
     def get_new_code(self):
         url = 'https://proverkacheka.nalog.ru:9999/v1/mobile/users/restore'
