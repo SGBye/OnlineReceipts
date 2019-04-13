@@ -1,7 +1,8 @@
 from datetime import datetime
 from json import JSONDecodeError
 
-from django.db import models
+from django.core.exceptions import ValidationError
+from django.db import models, IntegrityError
 from django.contrib.auth.models import User
 import requests
 
@@ -16,6 +17,9 @@ class Receipt(models.Model):
     summ = models.FloatField()
     shop = models.CharField(max_length=100)
 
+    class Meta:
+        unique_together = ('user', 'shop', 'summ', 'time',)
+
     def __str__(self):
         return f'{self.shop}, {self.transform_time}'
 
@@ -25,8 +29,11 @@ class Receipt(models.Model):
 
     @classmethod
     def create_from_json(cls, json, user):
-        Receipt.objects.get_or_create(user=user, time=json['document']['receipt']['dateTime'], items=json['document']['receipt']['items'],
+        try:
+            Receipt.objects.get_or_create(user=user, time=json['document']['receipt']['dateTime'], items=json['document']['receipt']['items'],
                                summ=json['document']['receipt']['totalSum'] / 100, shop=json['document']['receipt']['user'])
+        except IntegrityError:
+            raise ValidationError("Such receipt already exists")
 
 
 

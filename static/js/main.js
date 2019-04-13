@@ -22,8 +22,7 @@ $('#qrScan').on('submit', (function (e) {
             $("#ajaxModal").modal('show');
         },
         error: function (data) {
-            console.log("error");
-            console.log(data);
+            $("#ajaxModalError").modal('show');
         }
     });
 }))
