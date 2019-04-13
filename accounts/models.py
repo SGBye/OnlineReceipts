@@ -53,6 +53,7 @@ class Profile(models.Model):
     def check_existance(self, data):
         url = f"https://proverkacheka.nalog.ru:9999/v1/ofds/*/inns/*/fss/{data['fn']}/operations/1/tickets/{data['fd']}?fiscalSign={data['fp']}&date={data['time']}&sum={int(data['summ'])}"
         r = requests.get(url, auth=HTTPBasicAuth(self.phone, self.sms_code))
+        print("check existance:", r.status_code, r.text)
         return r.status_code
 
     def get_real_receipt(self, data):
