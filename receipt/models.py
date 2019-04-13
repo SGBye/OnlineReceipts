@@ -18,7 +18,9 @@ class Receipt(models.Model):
     shop = models.CharField(max_length=100)
 
     class Meta:
-        unique_together = ('user', 'shop', 'summ', 'time',)
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'time'], name='unique_receipt')
+        ]
 
     def __str__(self):
         return f'{self.shop}, {self.transform_time}'
