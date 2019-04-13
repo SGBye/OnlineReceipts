@@ -1,13 +1,8 @@
 from datetime import datetime
-from json import JSONDecodeError
 
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
 from django.contrib.auth.models import User
-import requests
-
-from requests.auth import HTTPBasicAuth
-import json
 
 
 class Receipt(models.Model):
