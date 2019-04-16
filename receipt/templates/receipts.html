@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row mb-2">
-        <div class="col-md-10 h4">Всего потрачено:</div>
+        <div class="col-md-8 h4">Всего потрачено:</div>
         <div class="col-md-2 h4">{{ total_summ }} &#8381;</div>
     </div>
 
@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <div class="row">
-                        <div class="col-lg-10">
+                        <div class="col-lg-8">
                             <h5 class="mb-0">
                                 <button class="btn btn-link" type="button" data-toggle="collapse"
                                         data-target="#{{ check.pk }}" aria-expanded="true" aria-controls="collapseOne">
@@ -20,8 +20,18 @@
                                 </button>
                             </h5>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
                             <div class="btn">{{ check.summ }} &#8381;</div>
+                        </div>
+                        <div class="col-lg-1">
+                            <div class="btn">
+                                <svg style="width: 15px;" staria-hidden="true" focusable="false" data-prefix="fas" data-icon="times"
+                                     class="svg-inline--fa fa-times fa-w-11" role="img"
+                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512">
+                                    <path fill="red"
+                                          d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>

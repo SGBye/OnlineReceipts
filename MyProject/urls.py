@@ -23,7 +23,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('receipts/', include('receipt.urls')),
     path('accounts/', include('accounts.urls')),
-    path('from_string', save_receipt_data, name='from_string'),
-    path('from_qr', scan_qr, name='from_qr'),
+    path('from_string/', save_receipt_data, name='from_string'),
+    path('from_qr/', scan_qr, name='from_qr'),
 
 ]
