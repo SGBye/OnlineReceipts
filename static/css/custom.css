@@ -14,3 +14,18 @@ label{display:inline-block;margin-bottom:.5rem;margin-right:.5rem}
     background-color: #003F72; !important;
 }
 
+.delete-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 15px;
+    height: 100%;
+    margin: auto;
+    cursor: pointer;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}

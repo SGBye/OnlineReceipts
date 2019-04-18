@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'kw81bgyg@izow+l0p3+!sj-8+2z+m8e0gpnh05ri@_nke(m5%l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'shielded-shore-48386.herokuapp.com']
 

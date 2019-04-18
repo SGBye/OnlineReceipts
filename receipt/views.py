@@ -1,4 +1,5 @@
 import ast
+import json
 
 import requests
 from django.conf import settings
@@ -86,3 +87,17 @@ def scan_qr(request):
 
     else:
         return render(request, 'fromQr.html')
+
+
+@login_required()
+def delete_receipt(request):
+    print(request.method)
+    if request.method == "DELETE":
+        receipt_id = json.loads(request.body)['id']
+        print(receipt_id)
+        try:
+            print('all cool')
+            Receipt.objects.get(pk=receipt_id).delete()
+            return HttpResponse(status=200)
+        except Receipt.DoesNotExist:
+            return HttpResponse(status=404)
