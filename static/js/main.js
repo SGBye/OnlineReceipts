@@ -13,7 +13,7 @@ $('#qrScan').on('submit', (function (e) {
 
     $.ajax({
         type: 'POST',
-        url: 'receipts/api/scan_qr',
+        url: '',
         data: formData,
         cache: false,
         contentType: false,
@@ -62,7 +62,6 @@ const deleteReceipts = document.querySelectorAll('.js-delete-receipt');
 deleteReceipts.forEach((item) => {
     item.addEventListener('click', () => {
         const id = item.dataset.id;
-        console.log(csrftoken)
         fetch(`/receipts/api/delete/${id}/`, {method: 'delete'})
             .then(res => console.log(res))
     })

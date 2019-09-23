@@ -38,7 +38,7 @@ class Profile(models.Model):
             self.get_new_code()
 
     def get_new_code(self):
-        url = 'https://proverkacheka.nalog.ru:9999/v1/mobile/users/restore'
+        url = settings.API_GET_NEW_PASSWORD
         r = requests.post(url, json={"phone": self.phone})
         if r.status_code == 204:
             return "ok"
@@ -46,7 +46,7 @@ class Profile(models.Model):
             return "fail"
 
     def login_to_api(self):
-        url = "https://proverkacheka.nalog.ru:9999/v1/mobile/users/login"
+        url = settings.API_LOGIN_URL
         r = requests.get(url, auth=HTTPBasicAuth(self.phone, self.sms_code))
         return r.status_code
 
@@ -59,9 +59,7 @@ class Profile(models.Model):
     def get_real_receipt(self, data):
         url = f'https://proverkacheka.nalog.ru:9999/v1/inns/*/kkts/*/fss/{data["fn"]}/tickets/{data["fd"]}?fiscalSign={data["fp"]}&sendToEmail=no'
         headers = {"device-id": "web_app", "device-os": "windows"}
-        print("treying to create")
         r = requests.get(url, headers=headers, auth=HTTPBasicAuth(self.phone, self.sms_code))
-        print(f"status code: {r.status_code}", r.text)
         to_parse = json.loads(r.text)
         try:
             Receipt.create_from_json(to_parse, user=self.user)

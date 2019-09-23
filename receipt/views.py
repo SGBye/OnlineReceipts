@@ -8,6 +8,8 @@ from django.db.models import Sum
 from django.shortcuts import render, HttpResponse, redirect
 from urllib.parse import parse_qs
 
+from django.views.decorators.csrf import csrf_exempt
+
 from receipt.forms import ReceiptDataForm
 from .models import Receipt
 
@@ -89,15 +91,13 @@ def scan_qr(request):
         return render(request, 'fromQr.html')
 
 
+@csrf_exempt
 @login_required()
-def delete_receipt(request):
+def delete_receipt(request, pk):
     print(request.method)
     if request.method == "DELETE":
-        receipt_id = json.loads(request.body)['id']
-        print(receipt_id)
         try:
-            print('all cool')
-            Receipt.objects.get(pk=receipt_id).delete()
+            Receipt.objects.get(pk=pk).delete()
             return HttpResponse(status=200)
         except Receipt.DoesNotExist:
             return HttpResponse(status=404)
